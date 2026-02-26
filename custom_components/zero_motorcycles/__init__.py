@@ -16,13 +16,14 @@ from .api import ZeroApiClient
 from .const import DOMAIN, LOGGER
 from .coordinator import ZeroDataCoordinator
 from .data import ZeroData
+from .entity import ZeroMotorcycleEntity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
     from .data import ZeroConfigEntry
 
-PLATFORMS: list[Platform] = []
+PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
@@ -56,6 +57,7 @@ async def async_setup_entry(
     return True
 
 
+# async def async_setup_entry will automatically forward setup to the sensor platform
 async def async_unload_entry(
     hass: HomeAssistant,
     entry: ZeroConfigEntry,
