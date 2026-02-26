@@ -32,18 +32,19 @@ async def async_setup_entry(
     entry: ZeroConfigEntry,
 ) -> bool:
     """Set up this integration using UI."""
+
+    api_client = ZeroApiClient(
+        username=entry.data[CONF_USERNAME],
+        password=entry.data[CONF_PASSWORD],
+        session=async_get_clientsession(hass),
+    )
+
     coordinator = ZeroDataCoordinator(
         hass=hass,
-        logger=LOGGER,
-        name=DOMAIN,
-        update_interval=timedelta(hours=1),
+        api_client=api_client,
     )
     entry.runtime_data = ZeroData(
-        client=ZeroApiClient(
-            username=entry.data[CONF_USERNAME],
-            password=entry.data[CONF_PASSWORD],
-            session=async_get_clientsession(hass),
-        ),
+        client=api_client,
         integration=async_get_loaded_integration(hass, entry.domain),
         coordinator=coordinator,
     )

@@ -12,12 +12,6 @@ class ZeroMotorcycleEntity(CoordinatorEntity, Entity):
         super().__init__(coordinator)
         self._attr_unique_id = unique_id
         self._attr_name = name
-        self._device_info = DeviceInfo(
-            identifiers={(DOMAIN, unique_id)},
-            name=name,
-            manufacturer="Zero Motorcycles",
-            model="Unknown",  # Update when model info is available
-        )
 
     @property
     def available(self):
@@ -25,4 +19,11 @@ class ZeroMotorcycleEntity(CoordinatorEntity, Entity):
 
     @property
     def device_info(self) -> DeviceInfo:
-        return self._device_info
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.coordinator.data.vin)},
+            name=f"{self.coordinator.data.model_year} {self.coordinator.data.model_name}",
+            manufacturer="Zero Motorcycles",
+            model=self.coordinator.data.model_name,
+            sw_version=self.coordinator.data.software_version,
+            hw_version=f"Unit {self.coordinator.data.unit_number}",
+        )
