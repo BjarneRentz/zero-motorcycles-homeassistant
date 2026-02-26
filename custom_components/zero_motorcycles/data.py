@@ -9,17 +9,17 @@ if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
-    from .api import IntegrationBlueprintApiClient
-    from .coordinator import BlueprintDataUpdateCoordinator
+    from .api import ZeroApiClient
+    from .coordinator import ZeroDataCoordinator
 
 
-type IntegrationBlueprintConfigEntry = ConfigEntry[IntegrationBlueprintData]
+type ZeroConfigEntry = ConfigEntry[ZeroData]
 
 
 @dataclass
-class IntegrationBlueprintData:
+class ZeroData:
     """Data for the Blueprint integration."""
 
-    client: IntegrationBlueprintApiClient
-    coordinator: BlueprintDataUpdateCoordinator
+    client: ZeroApiClient
+    coordinator: ZeroDataCoordinator
     integration: Integration
