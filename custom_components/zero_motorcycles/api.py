@@ -11,8 +11,11 @@ from __future__ import annotations
 import aiohttp
 import async_timeout
 
-from custom_components.zero_motorcycles.models import ZeroBikeData
 from custom_components.zero_motorcycles.parser import ZeroParser
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from custom_components.zero_motorcycles.models import ZeroBikeData
 
 
 class ZeroApiClientError(Exception):

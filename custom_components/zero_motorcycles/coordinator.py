@@ -2,31 +2,57 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import (
-    ZeroApiClientAuthenticationError,
-    ZeroApiClientError,
-)
+from custom_components.zero_motorcycles.models import ZeroBikeData
 
 if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
     from .data import ZeroConfigEntry
 
 
-# https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
-class ZeroDataCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the API."""
+"""DataUpdateCoordinator for Zero Motorcycle."""
+import logging
+from datetime import timedelta
 
-    config_entry: ZeroConfigEntry
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-    async def _async_update_data(self) -> Any:
+from .api import ZeroApiClient, ZeroParser
+from .const import DOMAIN, LOGGER
+
+
+class ZeroDataCoordinator(DataUpdateCoordinator[ZeroBikeData]):
+    """Class to manage fetching Zero Motorcycle data."""
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        api_client: ZeroApiClient,
+    ) -> None:
+        """Initialize."""
+        self.api_client = api_client
+        self.unit_number = None
+
+        super().__init__(
+            hass,
+            LOGGER,
+            name=DOMAIN,
+            # Community recommendation: 2-5 minutes to avoid API lockout
+            update_interval=timedelta(minutes=5),
+        )
+
+    async def _async_update_data(self) -> ZeroBikeData:
         """Update data via library."""
         try:
-            return await self.config_entry.runtime_data.client.async_get_data()
-        except ZeroApiClientAuthenticationError as exception:
-            raise ConfigEntryAuthFailed(exception) from exception
-        except ZeroApiClientError as exception:
-            raise UpdateFailed(exception) from exception
+            # 1. Ensure we have the unit number (only fetch once)
+            if not self.unit_number:
+                self.unit_number = await self.api_client.get_unit_number()
+
+            # 2. Fetch the raw JSON list
+            return await self.api_client.get_bike_data(self.unit_number)
+
+        except Exception as err:
+            raise UpdateFailed(f"Error communicating with Zero API: {err}") from err
