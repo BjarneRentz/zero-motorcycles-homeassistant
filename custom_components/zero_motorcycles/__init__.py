@@ -1,9 +1,7 @@
 """
-Custom integration to integrate integration_blueprint with Home Assistant.
+Custom integration to integrate zero_motorcycles with Home Assistant.
 
-For more details about this integration, please refer to
-https://github.com/ludeeus/integration_blueprint
-"""
+For more details about this integration, please refer to the documentation at"""
 
 from __future__ import annotations
 
