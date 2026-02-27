@@ -23,7 +23,11 @@ if TYPE_CHECKING:
 
     from .data import ZeroConfigEntry
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [
+    Platform.SENSOR,
+    Platform.DEVICE_TRACKER,
+    Platform.BINARY_SENSOR,
+]
 
 
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry

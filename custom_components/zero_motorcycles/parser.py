@@ -46,19 +46,19 @@ class ZeroParser:
             model_year=decoded["year"],
             # Convering strings to proper types
             soc=int(data.get("soc", 0)),
-            mileage=float(data.get("mileage", 0.0)),
-            is_charging=data.get("charging") == "1",
-            is_plugged_in=data.get("pluggedin") == "1",
+            mileage=int(data.get("mileage", 0)),
+            is_charging=data.get("charging") == 1,
+            is_plugged_in=data.get("pluggedin") == 1,
             is_connected=True,
             latitude=float(data.get("latitude")) if data.get("latitude") else None,
             longitude=float(data.get("longitude")) if data.get("longitude") else None,
             software_version=data.get("software_version", "Unknown"),
             ignition=data.get("ignition") == "1",
-            is_tipped_over=data.get("tippedover") == "1",
+            is_tipped_over=data.get("tippedover") == 1,
             time_to_full_minutes=int(data.get("chargingtimeleft", 0))
-            if data.get("pluggedin") == "1"
+            if data.get("pluggedin") == 1
             else None,
-            is_charge_complete=data.get("chargingcomplete") == "1",
+            is_charge_complete=data.get("chargecomplete") == 1,
         )
 
     @staticmethod

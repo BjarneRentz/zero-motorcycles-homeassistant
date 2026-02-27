@@ -7,10 +7,12 @@ endpoints used can be overridden with `base_url` for testing.
 """
 
 from __future__ import annotations
+from re import L
 
 import aiohttp
 import async_timeout
 
+from custom_components.zero_motorcycles.const import LOGGER
 from custom_components.zero_motorcycles.parser import ZeroParser
 from typing import TYPE_CHECKING
 
@@ -84,7 +86,7 @@ class ZeroApiClient:
                 response = await self._session.get(self._base_url, params=params)
                 self._verify_response_or_raise(response)
                 data = await response.json()
+                LOGGER.debug("Raw API response for bike data: %s", data)
                 return ZeroParser.parse_telemetry(data)
-                return data[0] if data else {}
         except Exception as e:
             raise Exception(f"Error communicating with Zero API: {e}")

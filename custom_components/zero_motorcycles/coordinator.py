@@ -20,7 +20,7 @@ from datetime import timedelta
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import ZeroApiClient, ZeroParser
+from .api import ZeroApiClient
 from .const import DOMAIN, LOGGER
 
 
@@ -41,7 +41,7 @@ class ZeroDataCoordinator(DataUpdateCoordinator[ZeroBikeData]):
             LOGGER,
             name=DOMAIN,
             # Community recommendation: 2-5 minutes to avoid API lockout
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(minutes=10),
         )
 
     async def _async_update_data(self) -> ZeroBikeData:
@@ -52,7 +52,9 @@ class ZeroDataCoordinator(DataUpdateCoordinator[ZeroBikeData]):
                 self.unit_number = await self.api_client.get_unit_number()
 
             # 2. Fetch the raw JSON list
-            return await self.api_client.get_bike_data(self.unit_number)
-
+            result = await self.api_client.get_bike_data(self.unit_number)
         except Exception as err:
             raise UpdateFailed(f"Error communicating with Zero API: {err}") from err
+        else:
+            LOGGER.debug("Fetched raw bike data: %s", result)
+            return result
