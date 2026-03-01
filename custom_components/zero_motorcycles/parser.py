@@ -46,7 +46,7 @@ class ZeroParser:
             model_year=decoded["year"],
             # Convering strings to proper types
             soc=int(data.get("soc", 0)),
-            mileage=int(data.get("mileage", 0)),
+            mileage=float(data.get("mileage", 0)),
             is_charging=data.get("charging") == 1,
             is_plugged_in=data.get("pluggedin") == 1,
             is_connected=True,

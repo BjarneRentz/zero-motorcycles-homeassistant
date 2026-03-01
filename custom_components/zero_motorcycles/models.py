@@ -11,7 +11,7 @@ class ZeroBikeData:
     vin: str
     model_name: str
     model_year: str
-    mileage: int
+    mileage: float
     soc: int
     is_charging: bool
     is_plugged_in: bool
