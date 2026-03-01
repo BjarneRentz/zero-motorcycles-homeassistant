@@ -1,9 +1,10 @@
 """Entity for Zero Motorcycle."""
 
-from homeassistant.helpers.entity import Entity, DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from custom_components.zero_motorcycles.coordinator import ZeroDataCoordinator
+
 from .const import DOMAIN
 
 

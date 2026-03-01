@@ -1,5 +1,3 @@
-import logging
-from dataclasses import dataclass
 
 from custom_components.zero_motorcycles.models import ZeroBikeData
 

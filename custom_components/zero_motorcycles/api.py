@@ -1,4 +1,5 @@
-"""Zero Motorcycles unofficial API client.
+"""
+Zero Motorcycles unofficial API client.
 
 This client implements a small, resilient wrapper around the
 unofficial Zero Motorcycles REST API. It performs authentication,
@@ -7,14 +8,14 @@ endpoints used can be overridden with `base_url` for testing.
 """
 
 from __future__ import annotations
-from re import L
+
+from typing import TYPE_CHECKING
 
 import aiohttp
 import async_timeout
 
 from custom_components.zero_motorcycles.const import LOGGER
 from custom_components.zero_motorcycles.parser import ZeroParser
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from custom_components.zero_motorcycles.models import ZeroBikeData

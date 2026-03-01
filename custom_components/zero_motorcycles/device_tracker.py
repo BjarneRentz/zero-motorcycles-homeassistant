@@ -1,6 +1,7 @@
 from homeassistant.components.device_tracker import SourceType, TrackerEntity
 
 from custom_components.zero_motorcycles.data import ZeroData
+
 from .entity import ZeroMotorcycleEntity
 
 

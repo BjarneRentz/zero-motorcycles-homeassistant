@@ -4,21 +4,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.zero_motorcycles.models import ZeroBikeData
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
-    from .data import ZeroConfigEntry
+
 
 
 """DataUpdateCoordinator for Zero Motorcycle."""
-import logging
 from datetime import timedelta
-
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import ZeroApiClient
 from .const import DOMAIN, LOGGER

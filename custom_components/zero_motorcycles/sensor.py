@@ -3,12 +3,10 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.const import PERCENTAGE, UnitOfLength, UnitOfTime
-from custom_components.zero_motorcycles.coordinator import ZeroDataCoordinator
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
+from homeassistant.const import UnitOfLength, UnitOfTime
 
 from custom_components.zero_motorcycles.data import ZeroData
+
 from .entity import ZeroMotorcycleEntity
 
 

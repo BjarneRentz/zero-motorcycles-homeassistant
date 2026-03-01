@@ -2,6 +2,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
 )
+
 from .entity import ZeroMotorcycleEntity
 
 

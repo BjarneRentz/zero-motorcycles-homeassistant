@@ -1,7 +1,8 @@
 """
 Custom integration to integrate zero_motorcycles with Home Assistant.
 
-For more details about this integration, please refer to the documentation at"""
+For more details about this integration, please refer to the documentation at
+"""
 
 from __future__ import annotations
 
@@ -36,7 +37,6 @@ async def async_setup_entry(
     entry: ZeroConfigEntry,
 ) -> bool:
     """Set up this integration using UI."""
-
     api_client = ZeroApiClient(
         username=entry.data[CONF_USERNAME],
         password=entry.data[CONF_PASSWORD],
