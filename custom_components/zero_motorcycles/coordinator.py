@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
 
-
 """DataUpdateCoordinator for Zero Motorcycle."""
 from datetime import timedelta
 
