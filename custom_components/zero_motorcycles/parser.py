@@ -2,14 +2,14 @@ from custom_components.zero_motorcycles.models import ZeroBikeData
 
 # Year Mapping (10th Character)
 YEAR_MAP = {
-    "K": 2019,
-    "L": 2020,
-    "M": 2021,
-    "N": 2022,
-    "P": 2023,
-    "R": 2024,
-    "S": 2025,
-    "T": 2026,
+    "K": "2019",
+    "L": "2020",
+    "M": "2021",
+    "N": "2022",
+    "P": "2023",
+    "R": "2024",
+    "S": "2025",
+    "T": "2026",
 }
 MODELS = {
     "FA": "SR/F",
@@ -25,7 +25,7 @@ class ZeroParser:
 
     @staticmethod
     def parse_telemetry(raw_json: list) -> ZeroBikeData:
-        """Parses the first item in the Mongol API list response."""
+        """Parse first item in the Mongol API list response."""
         if not raw_json or not isinstance(raw_json, list):
             raise ValueError("Invalid API response format")
 
@@ -59,8 +59,8 @@ class ZeroParser:
         )
 
     @staticmethod
-    def decode_zero_vin(vin: str):
-        """Decodes a Zero Motorcycle VIN into model and year info."""
+    def decode_zero_vin(vin: str) -> dict[str, str]:
+        """Decode a Zero Motorcycle VIN into model and year info."""
         if not vin or len(vin) < 17:
             return {"model": "Unknown", "year": "Unknown"}
 
