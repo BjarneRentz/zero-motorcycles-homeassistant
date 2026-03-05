@@ -11,11 +11,10 @@ from custom_components.zero_motorcycles.models import ZeroBikeData
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
+    from .api import ZeroApiClient
 
-"""DataUpdateCoordinator for Zero Motorcycle."""
 from datetime import timedelta
 
-from .api import ZeroApiClient
 from .const import DOMAIN, LOGGER
 
 
@@ -49,7 +48,8 @@ class ZeroDataCoordinator(DataUpdateCoordinator[ZeroBikeData]):
             # 2. Fetch the raw JSON list
             result = await self.api_client.get_bike_data(self.unit_number)
         except Exception as err:
-            raise UpdateFailed(f"Error communicating with Zero API: {err}") from err
+            error_message = f"Error fetching data for unit {self.unit_number}: {err}"
+            raise UpdateFailed(error_message) from err
         else:
             LOGGER.debug("Fetched raw bike data: %s", result)
             return result

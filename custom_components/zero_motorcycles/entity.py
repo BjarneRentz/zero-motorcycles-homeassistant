@@ -27,5 +27,5 @@ class ZeroMotorcycleEntity(CoordinatorEntity[ZeroDataCoordinator], Entity):
         )
 
     @property
-    def available(self):
+    def available(self) -> bool:
         return self.coordinator.last_update_success

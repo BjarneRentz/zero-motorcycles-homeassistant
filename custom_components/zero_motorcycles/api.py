@@ -36,7 +36,7 @@ class ZeroApiClientAuthenticationError(ZeroApiClientError):
 class ZeroApiClient:
     """ApiClient for Zero Motorcycle Mongol API."""
 
-    def __init__(self, username, password, session: aiohttp.ClientSession):
+    def __init__(self, username: str, password: str, session: aiohttp.ClientSession):
         self._username = username
         self._password = password
         self._session = session
@@ -49,9 +49,10 @@ class ZeroApiClient:
         try:
             response.raise_for_status()
         except aiohttp.ClientResponseError as err:
-            raise ZeroApiClientError(f"Unexpected response: {err}") from err
+            error_msg = f"Unexpected response: {err}"
+            raise ZeroApiClientError(error_msg) from err
 
-    async def get_unit_number(self):
+    async def get_unit_number(self) -> str | None:
         """Fetch the unit number (ID) of your motorcycle."""
         params = {
             "commandname": "get_units",
@@ -70,9 +71,10 @@ class ZeroApiClient:
                     return data[0]["unitnumber"]
                 return None
         except Exception as e:
-            raise Exception(f"Error fetching unit number: {e}")
+            error_msg = f"Error fetching unit number: {e}"
+            raise ZeroApiClientError(error_msg) from e
 
-    async def get_bike_data(self, unit_number) -> ZeroBikeData:
+    async def get_bike_data(self, unit_number: str) -> ZeroBikeData:
         """Fetch the latest telemetry data for a specific bike."""
         params = {
             "commandname": "get_last_transmit",
@@ -90,4 +92,5 @@ class ZeroApiClient:
                 LOGGER.debug("Raw API response for bike data: %s", data)
                 return ZeroParser.parse_telemetry(data)
         except Exception as e:
-            raise Exception(f"Error communicating with Zero API: {e}")
+            error_msg = f"Error communicating with Zero API: {e}"
+            raise ZeroApiClientError(error_msg) from e

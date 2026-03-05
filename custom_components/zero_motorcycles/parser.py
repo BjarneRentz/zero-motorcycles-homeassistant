@@ -1,3 +1,5 @@
+"""Parser for Zero Motorcycles data from the Mongol API."""
+
 from custom_components.zero_motorcycles.models import ZeroBikeData
 
 # Year Mapping (10th Character)

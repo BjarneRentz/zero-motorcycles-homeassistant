@@ -16,6 +16,12 @@ ignore = [
     "PLR2004", # constant variable
     "EM101", # Allow string messages in exceptions
     "TRY003",
+    "D100",
+    "D101",
+    "D102", # Not all methods need docstrings
+    "D107", # Also not init methods,
+    "ANN204", #Init needs no type annotation,
+    "EXE002",
 ]
 
 [lint.flake8-pytest-style]

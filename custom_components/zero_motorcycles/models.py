@@ -1,4 +1,4 @@
-""" "Simple data model for Zero Motorcycle telemetry."""
+"""Simple data model for Zero Motorcycle telemetry."""
 
 from dataclasses import dataclass
 
