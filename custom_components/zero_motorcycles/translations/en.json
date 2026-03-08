@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "If you need help with the configuration have a look at the documentation.",
+                "description": "Login with your Zero Motorcycles account credentials of the official Zero app.",
                 "data": {
                     "username": "Username",
                     "password": "Password"

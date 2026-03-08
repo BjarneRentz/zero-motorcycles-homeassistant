@@ -1,0 +1,50 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Manifest Version matches Tag
+        shell: bash
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/}
+          # Remove 'v' prefix if it exists to compare numerically (1.0.2)
+          TAG_CLEAN=${TAG_VERSION#v}
+
+          # 2. Extract version from manifest.json using jq
+          MANIFEST_VERSION=$(jq -r '.version' custom_components/zero_motorcycles/manifest.json)
+
+          echo "GitHub Tag: $TAG_CLEAN"
+          echo "Manifest Version: $MANIFEST_VERSION"
+
+          if [ "$TAG_CLEAN" != "$MANIFEST_VERSION" ]; then
+            echo "❌ ERROR: Version mismatch!"
+            echo "The version in manifest.json ($MANIFEST_VERSION) does not match the tag ($TAG_CLEAN)."
+            exit 1
+          fi
+          echo "✅ Versions match!"
+
+      - name: 📦 ZIP the integration
+        run: |
+          cd custom_components/zero_motorcycles
+          zip -r ../../zero_motorcycles.zip .
+          cd ../..
+
+      - name: 🚀 Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "${{ github.ref_name }}" \
+            --generate-notes
