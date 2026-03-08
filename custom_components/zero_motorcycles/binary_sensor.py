@@ -25,7 +25,7 @@ class ZeroChargingBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.BATTERY_CHARGING
 
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="is_charging", name_suffix="Charging")
+        super().__init__(coordinator, context="is_charging", name="Charging")
 
     @property
     def is_on(self) -> bool:
@@ -36,7 +36,7 @@ class ZeroIgnitionBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.POWER
 
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="ignition", name_suffix="Ignition")
+        super().__init__(coordinator, context="ignition", name="Ignition")
 
     @property
     def is_on(self) -> bool:
@@ -47,7 +47,7 @@ class ZeroTipOverBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="tipped_over", name_suffix="Tip-over")
+        super().__init__(coordinator, context="tipped_over", name="Tip-over")
 
     @property
     def is_on(self) -> bool:
@@ -58,7 +58,7 @@ class ZeroPluggedInBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.POWER
 
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="plugged_in", name_suffix="Plugged In")
+        super().__init__(coordinator, context="plugged_in", name="Plugged In")
 
     @property
     def is_on(self) -> bool:

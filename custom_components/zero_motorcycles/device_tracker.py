@@ -27,7 +27,7 @@ class ZeroMotorcycleTracker(ZeroMotorcycleEntity, TrackerEntity):
         super().__init__(
             coordinator,
             context="location",
-            name_suffix="Location",
+            name="Location",
         )
 
     @property

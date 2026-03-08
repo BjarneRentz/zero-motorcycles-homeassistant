@@ -40,7 +40,7 @@ class ZeroBatterySensor(ZeroMotorcycleEntity, SensorEntity):
     def __init__(self, coordinator: ZeroDataCoordinator) -> None:
         """Initialize the battery sensor."""
         # We pass 'soc' as the context for the unique_id
-        super().__init__(coordinator, context="soc", name_suffix="State of Charge")
+        super().__init__(coordinator, context="soc", name="State of Charge")
         self._attr_name = "SoC"
         self._attr_device_class = SensorDeviceClass.BATTERY
         self._attr_native_unit_of_measurement = "%"
@@ -60,7 +60,7 @@ class ZeroOdometerSensor(ZeroMotorcycleEntity, SensorEntity):
 
     def __init__(self, coordinator: ZeroDataCoordinator) -> None:
         """Initialize the odometer sensor."""
-        super().__init__(coordinator, context="mileage", name_suffix="Odometer")
+        super().__init__(coordinator, context="mileage", name="Odometer")
 
     @property
     def native_value(self) -> float:
@@ -79,7 +79,7 @@ class ZeroChargingTimeLeftSensor(ZeroMotorcycleEntity, SensorEntity):
         super().__init__(
             coordinator,
             context="remaining_charging_time",
-            name_suffix="Remaining Charging Time",
+            name="Remaining Charging Time",
         )
 
     @property

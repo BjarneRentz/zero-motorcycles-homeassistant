@@ -44,7 +44,7 @@ class ZeroApiClient:
 
     def _verify_response_or_raise(self, response: aiohttp.ClientResponse) -> None:
         """Verify that the response is valid and raise appropriate errors."""
-        if response.status in (401, 403):
+        if response.status in (401, 403, 601):
             raise ZeroApiClientAuthenticationError
         try:
             response.raise_for_status()
@@ -61,18 +61,14 @@ class ZeroApiClient:
             "pass": self._password,
         }
 
-        try:
-            async with async_timeout.timeout(10):
-                response = await self._session.get(self._base_url, params=params)
-                self._verify_response_or_raise(response)
-                data = await response.json()
-                # Zero returns a list of units; we grab the first one
-                if data and len(data) > 0:
-                    return data[0]["unitnumber"]
-                return None
-        except Exception as e:
-            error_msg = f"Error fetching unit number: {e}"
-            raise ZeroApiClientError(error_msg) from e
+        async with async_timeout.timeout(10):
+            response = await self._session.get(self._base_url, params=params)
+            self._verify_response_or_raise(response)
+            data = await response.json()
+            # Zero returns a list of units; we grab the first one
+            if data and len(data) > 0:
+                return data[0]["unitnumber"]
+            return None
 
     async def get_bike_data(self, unit_number: str) -> ZeroBikeData:
         """Fetch the latest telemetry data for a specific bike."""
@@ -84,13 +80,9 @@ class ZeroApiClient:
             "unitnumber": unit_number,
         }
 
-        try:
-            async with async_timeout.timeout(10):
-                response = await self._session.get(self._base_url, params=params)
-                self._verify_response_or_raise(response)
-                data = await response.json()
-                LOGGER.debug("Raw API response for bike data: %s", data)
-                return ZeroParser.parse_telemetry(data)
-        except Exception as e:
-            error_msg = f"Error communicating with Zero API: {e}"
-            raise ZeroApiClientError(error_msg) from e
+        async with async_timeout.timeout(10):
+            response = await self._session.get(self._base_url, params=params)
+            self._verify_response_or_raise(response)
+            data = await response.json()
+            LOGGER.debug("Raw API response for bike data: %s", data)
+            return ZeroParser.parse_telemetry(data)
