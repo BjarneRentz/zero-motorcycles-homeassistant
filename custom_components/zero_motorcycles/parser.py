@@ -1,5 +1,8 @@
 """Parser for Zero Motorcycles data from the Mongol API."""
 
+from datetime import datetime
+from homeassistant.util import dt as dt_util
+
 from custom_components.zero_motorcycles.models import ZeroBikeData
 
 # Year Mapping (10th Character)
@@ -37,6 +40,7 @@ class ZeroParser:
         # Decode VIN for model/year (using the logic from our previous step)
         # Assuming you've integrated the decode_zero_vin function here
         decoded = ZeroParser.decode_zero_vin(vin)
+        last_updated = ZeroParser.parse_zero_time(data.get("datetime_actual"))
 
         return ZeroBikeData(
             unit_number=data.get("unitnumber"),
@@ -58,6 +62,7 @@ class ZeroParser:
             if data.get("pluggedin") == 1
             else None,
             is_charge_complete=data.get("chargecomplete") == 1,
+            last_updated=last_updated,
         )
 
     @staticmethod
@@ -77,3 +82,17 @@ class ZeroParser:
             "model": model_name,
             "year": model_year,
         }
+
+    @staticmethod
+    def parse_zero_time(api_datetime: str) -> datetime | None:
+        if not api_datetime or not isinstance(api_datetime, str):
+            return None
+
+        try:
+            # Format: Jahr(4) Monat(2) Tag(2) Stunde(2) Minute(2) Sekunde(2)
+            naive_dt = datetime.strptime(api_datetime, "%Y%m%d%H%M%S")
+
+            return naive_dt.replace(tzinfo=dt_util.UTC)
+
+        except ValueError:
+            return None

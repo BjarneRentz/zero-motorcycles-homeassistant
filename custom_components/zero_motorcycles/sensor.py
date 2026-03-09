@@ -1,11 +1,16 @@
 """Sensor entities for Zero Motorcycles integration."""
 
+from datetime import datetime
+import stat
+from unicodedata import category
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
+    SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import UnitOfLength, UnitOfTime
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfLength, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -30,6 +35,7 @@ async def async_setup_entry(
             ZeroBatterySensor(data_container.coordinator),
             ZeroOdometerSensor(data_container.coordinator),
             ZeroChargingTimeLeftSensor(data_container.coordinator),
+            ZeroLastReportedUpdateSensor(data_container.coordinator),
         ]
     )
 
@@ -40,10 +46,15 @@ class ZeroBatterySensor(ZeroMotorcycleEntity, SensorEntity):
     def __init__(self, coordinator: ZeroDataCoordinator) -> None:
         """Initialize the battery sensor."""
         # We pass 'soc' as the context for the unique_id
-        super().__init__(coordinator, context="soc", name="State of Charge")
-        self._attr_name = "SoC"
-        self._attr_device_class = SensorDeviceClass.BATTERY
-        self._attr_native_unit_of_measurement = "%"
+        super().__init__(coordinator, context="soc")
+
+        self.entity_description = SensorEntityDescription(
+            key="soc",
+            name="State of Charge",
+            device_class=SensorDeviceClass.BATTERY,
+            native_unit_of_measurement=PERCENTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+        )
 
     @property
     def native_value(self) -> int:
@@ -54,13 +65,17 @@ class ZeroBatterySensor(ZeroMotorcycleEntity, SensorEntity):
 class ZeroOdometerSensor(ZeroMotorcycleEntity, SensorEntity):
     """Mileage/Odometer sensor."""
 
-    _attr_device_class = SensorDeviceClass.DISTANCE
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
-    _attr_native_unit_of_measurement = UnitOfLength.KILOMETERS
-
     def __init__(self, coordinator: ZeroDataCoordinator) -> None:
         """Initialize the odometer sensor."""
-        super().__init__(coordinator, context="mileage", name="Odometer")
+        super().__init__(coordinator, context="mileage")
+
+        self.entity_description = SensorEntityDescription(
+            key="mileage",
+            name="Mileage",
+            device_class=SensorDeviceClass.DISTANCE,
+            native_unit_of_measurement=UnitOfLength.KILOMETERS,
+            state_class=SensorStateClass.TOTAL_INCREASING,
+        )
 
     @property
     def native_value(self) -> float:
@@ -71,18 +86,41 @@ class ZeroOdometerSensor(ZeroMotorcycleEntity, SensorEntity):
 class ZeroChargingTimeLeftSensor(ZeroMotorcycleEntity, SensorEntity):
     """Time remaining until charge complete."""
 
-    _attr_device_class = SensorDeviceClass.DURATION
-    _attr_native_unit_of_measurement = UnitOfTime.MINUTES
-
     def __init__(self, coordinator: ZeroDataCoordinator) -> None:
         """Initialize the charging time left sensor."""
-        super().__init__(
-            coordinator,
-            context="remaining_charging_time",
+        super().__init__(coordinator, context="remaining_charging_time")
+
+        self.entity_description = SensorEntityDescription(
+            key="remaining_charging_time",
             name="Remaining Charging Time",
+            device_class=SensorDeviceClass.DURATION,
+            native_unit_of_measurement=UnitOfTime.MINUTES,
+            state_class=SensorStateClass.MEASUREMENT,
         )
 
     @property
     def native_value(self) -> int | None:
         """Return the time remaining until charge complete in minutes."""
         return self.coordinator.data.time_to_full_minutes
+
+
+class ZeroLastReportedUpdateSensor(ZeroMotorcycleEntity, SensorEntity):
+    """Last reported update time from the motorcycle."""
+
+    def __init__(self, coordinator: ZeroDataCoordinator) -> None:
+        """Initialize the last update sensor."""
+        super().__init__(coordinator, context="last_update")
+
+        self.entity_description = SensorEntityDescription(
+            key="last_update",
+            name="Last Reported Update",
+            device_class=SensorDeviceClass.TIMESTAMP,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        )
+
+    @property
+    def native_value(self) -> datetime | None:
+        """Return the last update time as an ISO 8601 string."""
+        if self.coordinator.data.last_updated:
+            return self.coordinator.data.last_updated
+        return None

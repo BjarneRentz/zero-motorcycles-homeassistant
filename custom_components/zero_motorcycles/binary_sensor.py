@@ -1,6 +1,7 @@
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
+    BinarySensorEntityDescription,
 )
 
 from custom_components.zero_motorcycles.coordinator import ZeroDataCoordinator
@@ -22,10 +23,13 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:  # noqa: A
 
 
 class ZeroChargingBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
-    _attr_device_class = BinarySensorDeviceClass.BATTERY_CHARGING
-
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="is_charging", name="Charging")
+        super().__init__(coordinator, context="is_charging")
+        self.entity_description = BinarySensorEntityDescription(
+            key="is_charging",
+            name="Charging",
+            device_class=BinarySensorDeviceClass.BATTERY_CHARGING,
+        )
 
     @property
     def is_on(self) -> bool:
@@ -33,10 +37,13 @@ class ZeroChargingBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
 
 
 class ZeroIgnitionBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
-    _attr_device_class = BinarySensorDeviceClass.POWER
-
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="ignition", name="Ignition")
+        super().__init__(coordinator, context="ignition")
+        self.entity_description = BinarySensorEntityDescription(
+            key="ignition",
+            name="Ignition",
+            device_class=BinarySensorDeviceClass.POWER,
+        )
 
     @property
     def is_on(self) -> bool:
@@ -44,10 +51,13 @@ class ZeroIgnitionBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
 
 
 class ZeroTipOverBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
-    _attr_device_class = BinarySensorDeviceClass.PROBLEM
-
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="tipped_over", name="Tip-over")
+        super().__init__(coordinator, context="tipped_over")
+        self.entity_description = BinarySensorEntityDescription(
+            key="tipped_over",
+            name="Tipped Over",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        )
 
     @property
     def is_on(self) -> bool:
@@ -58,7 +68,12 @@ class ZeroPluggedInBinarySensor(ZeroMotorcycleEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.POWER
 
     def __init__(self, coordinator: ZeroDataCoordinator):
-        super().__init__(coordinator, context="plugged_in", name="Plugged In")
+        super().__init__(coordinator, context="plugged_in")
+        self.entity_description = BinarySensorEntityDescription(
+            key="plugged_in",
+            name="Plugged In",
+            device_class=BinarySensorDeviceClass.POWER,
+        )
 
     @property
     def is_on(self) -> bool:

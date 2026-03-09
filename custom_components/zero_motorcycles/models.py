@@ -1,6 +1,7 @@
 """Simple data model for Zero Motorcycle telemetry."""
 
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
@@ -23,3 +24,4 @@ class ZeroBikeData:
     software_version: str
     ignition: bool
     is_tipped_over: bool
+    last_updated: datetime | None

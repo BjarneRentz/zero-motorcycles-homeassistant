@@ -11,10 +11,11 @@ from .const import DOMAIN
 class ZeroMotorcycleEntity(CoordinatorEntity[ZeroDataCoordinator], Entity):
     """Representation of a Zero Motorcycle."""
 
-    def __init__(self, coordinator: ZeroDataCoordinator, context: str, name: str):
+    _attr_has_entity_name = True
+
+    def __init__(self, coordinator: ZeroDataCoordinator, context: str):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.data.unit_number}_{context}"
-        self._attr_name = name
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, coordinator.data.vin)},
             name=f"{coordinator.data.model_year} {coordinator.data.model_name}",
